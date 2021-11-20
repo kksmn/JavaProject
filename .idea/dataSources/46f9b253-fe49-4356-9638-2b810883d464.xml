@@ -903,189 +903,232 @@ SELECT|sys.sys_config
       <ObjectGrants>SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,RELOAD,SHUTDOWN,PROCESS,FILE,REFERENCES,INDEX,ALTER,SHOW DATABASES,SUPER,CREATE TEMPORARY TABLES,LOCK TABLES,EXECUTE,REPLICATION SLAVE,REPLICATION CLIENT,CREATE VIEW,SHOW VIEW,CREATE ROUTINE,ALTER ROUTINE,CREATE USER,EVENT,TRIGGER,CREATE TABLESPACE,CREATE ROLE,DROP ROLE!
 </ObjectGrants>
     </user>
-    <table id="282" parent="3" name="role_table"/>
-    <table id="283" parent="3" name="roles"/>
-    <table id="284" parent="3" name="roles_"/>
-    <table id="285" parent="3" name="theme"/>
-    <table id="286" parent="3" name="user"/>
-    <table id="287" parent="3" name="user_table"/>
-    <table id="288" parent="3" name="users"/>
-    <table id="289" parent="3" name="users_"/>
-    <column id="290" parent="282" name="id">
+    <table id="282" parent="3" name="request_table"/>
+    <table id="283" parent="3" name="role_table"/>
+    <table id="284" parent="3" name="roles"/>
+    <table id="285" parent="3" name="roles_"/>
+    <table id="286" parent="3" name="theme"/>
+    <table id="287" parent="3" name="user"/>
+    <table id="288" parent="3" name="user_table"/>
+    <table id="289" parent="3" name="users"/>
+    <table id="290" parent="3" name="users_"/>
+    <column id="291" parent="282" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="291" parent="282" name="name">
+    <column id="292" parent="282" name="name">
+      <Position>2</Position>
+      <DataType>varchar(20)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="293" parent="282" name="description">
+      <Position>3</Position>
+      <DataType>varchar(500)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="294" parent="282" name="remuneration">
+      <Position>4</Position>
+      <DataType>decimal(10,2 digit)|0s</DataType>
+    </column>
+    <column id="295" parent="282" name="status">
+      <Position>5</Position>
+      <DataType>enum(&apos;approved&apos;, &apos;not approved&apos;)|0e</DataType>
+    </column>
+    <column id="296" parent="282" name="user_id">
+      <Position>6</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <index id="297" parent="282" name="user_id">
+      <ColNames>user_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="298" parent="282" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="299" parent="282" name="request_table_ibfk_1">
+      <ColNames>user_id</ColNames>
+      <RefTableName>user_table</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="300" parent="283" name="id">
+      <Position>1</Position>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="301" parent="283" name="name">
       <Position>2</Position>
       <DataType>varchar(20)|0s</DataType>
     </column>
-    <key id="292" parent="282" name="PRIMARY">
+    <key id="302" parent="283" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="293" parent="283" name="id">
+    <column id="303" parent="284" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="294" parent="283" name="name">
+    <column id="304" parent="284" name="name">
       <Position>2</Position>
       <DataType>varchar(45)|0s</DataType>
     </column>
-    <key id="295" parent="283" name="PRIMARY">
+    <key id="305" parent="284" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="296" parent="284" name="id">
+    <column id="306" parent="285" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="297" parent="284" name="name">
+    <column id="307" parent="285" name="name">
       <Position>2</Position>
       <DataType>varchar(500)|0s</DataType>
     </column>
-    <key id="298" parent="284" name="PRIMARY">
+    <key id="308" parent="285" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="299" parent="285" name="id">
+    <column id="309" parent="286" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="300" parent="285" name="theme">
+    <column id="310" parent="286" name="theme">
       <Position>2</Position>
       <DataType>varchar(45)|0s</DataType>
     </column>
-    <key id="301" parent="285" name="PRIMARY">
+    <key id="311" parent="286" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="302" parent="286" name="id">
+    <column id="312" parent="287" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="303" parent="286" name="login">
+    <column id="313" parent="287" name="login">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
     </column>
-    <column id="304" parent="286" name="password">
+    <column id="314" parent="287" name="password">
       <Position>3</Position>
       <DataType>varchar(500)|0s</DataType>
     </column>
-    <column id="305" parent="286" name="role_id">
+    <column id="315" parent="287" name="role_id">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <index id="306" parent="286" name="role_id">
+    <index id="316" parent="287" name="role_id">
       <ColNames>role_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="307" parent="286" name="PRIMARY">
+    <key id="317" parent="287" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="308" parent="286" name="user_ibfk_1">
+    <foreign-key id="318" parent="287" name="user_ibfk_1">
       <ColNames>role_id</ColNames>
       <RefTableName>roles</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="309" parent="287" name="id">
+    <column id="319" parent="288" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="310" parent="287" name="login">
+    <column id="320" parent="288" name="login">
       <Position>2</Position>
       <DataType>varchar(20)|0s</DataType>
     </column>
-    <column id="311" parent="287" name="password">
+    <column id="321" parent="288" name="password">
       <Position>3</Position>
       <DataType>varchar(5000)|0s</DataType>
     </column>
-    <column id="312" parent="287" name="role_id">
+    <column id="322" parent="288" name="role_id">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <index id="313" parent="287" name="role_id">
+    <index id="323" parent="288" name="role_id">
       <ColNames>role_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="314" parent="287" name="PRIMARY">
+    <key id="324" parent="288" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="315" parent="287" name="user_table_ibfk_1">
+    <foreign-key id="325" parent="288" name="user_table_ibfk_1">
       <ColNames>role_id</ColNames>
       <RefTableName>role_table</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="316" parent="288" name="id">
+    <column id="326" parent="289" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="317" parent="288" name="login">
+    <column id="327" parent="289" name="login">
       <Position>2</Position>
       <DataType>varchar(45)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="318" parent="288" name="password">
+    <column id="328" parent="289" name="password">
       <Position>3</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="319" parent="288" name="PRIMARY">
+    <key id="329" parent="289" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="320" parent="289" name="id">
+    <column id="330" parent="290" name="id">
       <Position>1</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="321" parent="289" name="login">
+    <column id="331" parent="290" name="login">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
     </column>
-    <column id="322" parent="289" name="password">
+    <column id="332" parent="290" name="password">
       <Position>3</Position>
       <DataType>varchar(500)|0s</DataType>
     </column>
-    <column id="323" parent="289" name="role_id">
+    <column id="333" parent="290" name="role_id">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <index id="324" parent="289" name="FK5572kc0j1u7wxhaudxt69xdb3">
+    <index id="334" parent="290" name="FK5572kc0j1u7wxhaudxt69xdb3">
       <ColNames>role_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="325" parent="289" name="PRIMARY">
+    <key id="335" parent="290" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="326" parent="289" name="FK5572kc0j1u7wxhaudxt69xdb3">
+    <foreign-key id="336" parent="290" name="FK5572kc0j1u7wxhaudxt69xdb3">
       <ColNames>role_id</ColNames>
       <RefTableName>roles</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="327" parent="289" name="users__ibfk_1">
+    <foreign-key id="337" parent="290" name="users__ibfk_1">
       <ColNames>role_id</ColNames>
       <RefTableName>roles_</RefTableName>
       <RefColNames>id</RefColNames>
