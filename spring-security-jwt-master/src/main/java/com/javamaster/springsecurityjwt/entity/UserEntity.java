@@ -23,8 +23,10 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String activationCode;
+
     @Column
-    @Email(message = "Email is not correct")
+   /* @Email(message = "Email is not correct")*/
     private String login;
 
     @Column
@@ -32,6 +34,13 @@ public class UserEntity {
     @Size(min = 10)
     private String password;
 
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity roleEntity;

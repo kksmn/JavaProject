@@ -38,4 +38,10 @@ public class UserService {
         }
         return null;
     }
+    public boolean activateUser(String code) {
+        UserEntity userEntity=userEntityRepository.findByActivationCode(code);
+        if (userEntity==null) return false;/*
+        userEntity.setActivationCode(null);*/
+        return true;
+    }
 }
