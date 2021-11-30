@@ -18,11 +18,15 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserEntity saveUser(UserEntity userEntity) {
-        RoleEntity userRole = roleEntityRepository.findByName("ROLE_USER");
-        userEntity.setRoleEntity(userRole);
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        return userEntityRepository.save(userEntity);
+    public boolean saveUser(UserEntity userEntity) {
+        if(findByLogin(userEntity.getLogin())==null) {
+            RoleEntity userRole = roleEntityRepository.findByName("ROLE_USER");
+            userEntity.setRoleEntity(userRole);
+            userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+            userEntityRepository.save(userEntity);
+            return true;
+        }
+        else return false;
     }
 
     public UserEntity findByLogin(String login) {

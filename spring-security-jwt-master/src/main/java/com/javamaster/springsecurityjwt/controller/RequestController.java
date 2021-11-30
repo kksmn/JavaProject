@@ -19,7 +19,7 @@ public class RequestController {
     private RequestService requestService;
 
     @PostMapping("/createRequest")
-    public String registerUser(@RequestBody @Valid NewRequest request) {
+    public String createRequest(@RequestBody @Valid NewRequest request) {
         RequestEntity r = new RequestEntity();
         if(requestService.findByName(request.getName())==null){
             r.setName(request.getName());
@@ -41,22 +41,33 @@ public class RequestController {
         else return null;
     }
 
-    /*@GetMapping("/request/{id}/approve")
+    @GetMapping("/request/{id}/approve")
     public String approveRequest(@PathVariable Integer id) {
-       requestService.findById(id);
+       requestService.approveById(id);
        return "ok";
 
-    }*/
+    }
     @GetMapping("/request/{id}/decline")
     public String declineRequest(@PathVariable Integer id) {
         requestService.deleteById(id);
         return "ok";
 
     }
-    /*@GetMapping("/requests")
+    @GetMapping("/requests")
     public List<RequestEntity> getAllRequests() {
         List<RequestEntity> list=new ArrayList<RequestEntity>();
         list= requestService.getAll();
+        return list;
+
+    }
+ /*   @PutMapping("/request/{id}")
+    public RequestEntity> editRequest(@PathVariable Integer id, @RequestBody @Valid NewRequest request) {
+        RequestEntity requestEntity=new RequestEntity();
+        Optional<RequestEntity> req=requestService.findById(id);
+        if(req.isPresent()){
+            requestEntity.setName(request.getName());
+            requestEntity.setDescription(request.getDescription());
+        }
         return list;
 
     }*/

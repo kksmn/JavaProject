@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_table")
@@ -37,6 +38,7 @@ public class UserEntity {
     public String getActivationCode() {
         return activationCode;
     }
+    public String getRoles(){ return roleEntity.getName();}
 
     public void setActivationCode(String activationCode) {
         this.activationCode = activationCode;

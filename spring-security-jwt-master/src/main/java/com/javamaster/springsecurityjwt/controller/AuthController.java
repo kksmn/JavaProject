@@ -24,7 +24,6 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
         UserEntity u = new UserEntity();
-        if(userService.findByLogin(registrationRequest.getLogin())==null){
         u.setPassword(registrationRequest.getPassword());
         u.setLogin(registrationRequest.getLogin());
         u.setActivationCode(UUID.randomUUID().toString());
@@ -37,8 +36,7 @@ public class AuthController {
         );
         mailSender.send(u.getLogin(),"Activation code",message);
         return "OK";
-        }
-        else return "Such user already exists";
+
     }
 
     @GetMapping("/activate/{code}")

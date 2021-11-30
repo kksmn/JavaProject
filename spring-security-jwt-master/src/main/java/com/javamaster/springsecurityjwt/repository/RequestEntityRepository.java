@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RequestEntityRepository extends JpaRepository<RequestEntity, Integer> {
 
@@ -15,15 +16,12 @@ public interface RequestEntityRepository extends JpaRepository<RequestEntity, In
 
     @Transactional
     @Modifying
-   /* @Query("update RequestEntity set user_id=user_id WHERE id = :id")
-    void updateById(@Param("user_id") Integer user_id);*/
+    @Query("update RequestEntity set status=true WHERE id = :id")
+    void updateById(@Param("id") Integer id);
 
-    /*@Query("update RequestEntity set status=true WHERE id = :id")
-    void updateById(@Param("id") Integer id);*/
-
+ /*   @Query("update RequestEntity set name=req.name, description=req.description WHERE id = :req.id")
+    void updateById(@Param("Entity") RequestEntity req);*/
     void deleteById(Integer id);
-    List<RequestEntity> findAllByOrderByIdAsc();
-
-    @Query("select id,name from RequestEntity ")
-    List<RequestEntity> getAll();
+    List<RequestEntity> findAll();
+    Optional<RequestEntity> findById(Integer id);
 }

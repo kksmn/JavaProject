@@ -18,20 +18,25 @@ public class RequestService  {
 
         return requestEntityRepository.findByName(name);
     }
-    /*public void findById(Integer id) {
+    public void approveById(Integer id) {
 
          requestEntityRepository.updateById(id);
-    }*/
+    }
     public void deleteById(Integer id) {
 
         requestEntityRepository.deleteById(id);
     }
-    public RequestEntity saveRequest(RequestEntity reqEntity) {
+    public boolean saveRequest(RequestEntity reqEntity) {
 
-        return requestEntityRepository.save(reqEntity);
+         requestEntityRepository.save(reqEntity);
+         return true;
     }
     public List<RequestEntity> getAll( ) {
 
-        return requestEntityRepository.getAll();
+        return requestEntityRepository.findAll();
+    }
+    public Optional<RequestEntity> findById(Integer id ) {
+
+        return requestEntityRepository.findById(id);
     }
 }
