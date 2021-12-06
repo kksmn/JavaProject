@@ -1,6 +1,7 @@
 package com.javamaster.springsecurityjwt.service;
 
 import com.javamaster.springsecurityjwt.entity.UserEntity;
+import com.javamaster.springsecurityjwt.exceptions.UserException;
 import com.javamaster.springsecurityjwt.repository.UserEntityRepository;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -31,7 +32,7 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    public void saveUser() {
+    public void saveUser() throws UserException {
         UserEntity user = new UserEntity();
         user.setLogin("some@mail.ru");
         boolean isUserCreated = userService.saveUser(user);
@@ -46,7 +47,7 @@ public class UserServiceTest {
 
     }
     @Test
-    public void addUserFailTest() {
+    public void addUserFailTest() throws UserException {
         UserEntity user = new UserEntity();
 
         user.setLogin("John");

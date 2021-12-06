@@ -27,7 +27,6 @@ public class UserEntity {
     private String activationCode;
 
     @Column
-   /* @Email(message = "Email is not correct")*/
     private String login;
 
     @Column

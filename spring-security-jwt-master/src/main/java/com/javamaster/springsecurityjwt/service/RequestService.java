@@ -20,16 +20,23 @@ public class RequestService  {
     }
     public void approveById(Integer id) {
 
-         requestEntityRepository.updateById(id);
+         requestEntityRepository.updateStatusById(id);
+    }
+    public void updateById(Integer id,String name,String desc) {
+
+        requestEntityRepository.updateById(id,name,desc);
     }
     public void deleteById(Integer id) {
 
         requestEntityRepository.deleteById(id);
     }
     public boolean saveRequest(RequestEntity reqEntity) {
-
+         if(findByName(reqEntity.getName())==null){
          requestEntityRepository.save(reqEntity);
          return true;
+         }
+         else return false;
+
     }
     public List<RequestEntity> getAll( ) {
 

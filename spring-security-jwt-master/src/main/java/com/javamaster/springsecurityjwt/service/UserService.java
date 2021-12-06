@@ -2,6 +2,7 @@ package com.javamaster.springsecurityjwt.service;
 
 import com.javamaster.springsecurityjwt.entity.RoleEntity;
 import com.javamaster.springsecurityjwt.entity.UserEntity;
+import com.javamaster.springsecurityjwt.exceptions.UserException;
 import com.javamaster.springsecurityjwt.repository.RoleEntityRepository;
 import com.javamaster.springsecurityjwt.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public boolean saveUser(UserEntity userEntity) {
+    public boolean saveUser(UserEntity userEntity) throws UserException {
         if(findByLogin(userEntity.getLogin())==null) {
             RoleEntity userRole = roleEntityRepository.findByName("ROLE_USER");
             userEntity.setRoleEntity(userRole);
@@ -26,26 +27,28 @@ public class UserService {
             userEntityRepository.save(userEntity);
             return true;
         }
-        else return false;
+        else throw new UserException("User with such login already exists");
     }
 
     public UserEntity findByLogin(String login) {
         return userEntityRepository.findByLogin(login);
     }
 
-    public UserEntity findByLoginAndPassword(String login, String password) {
+    public UserEntity findByLoginAndPassword(String login, String password) throws UserException {
         UserEntity userEntity = findByLogin(login);
         if (userEntity != null) {
             if (passwordEncoder.matches(password, userEntity.getPassword())) {
                 return userEntity;
             }
         }
+        else throw new UserException("Incorrect login: such user doesn't exist");
         return null;
     }
-    public boolean activateUser(String code) {
+    public boolean activateUser(String code) throws UserException {
         UserEntity userEntity=userEntityRepository.findByActivationCode(code);
-        if (userEntity==null) return false;/*
-        userEntity.setActivationCode(null);*/
+        if (userEntity==null){
+             throw new UserException("Incorrect login");
+        }
         return true;
     }
 }

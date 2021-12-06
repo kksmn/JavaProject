@@ -17,11 +17,18 @@ public interface RequestEntityRepository extends JpaRepository<RequestEntity, In
     @Transactional
     @Modifying
     @Query("update RequestEntity set status=true WHERE id = :id")
-    void updateById(@Param("id") Integer id);
+    void updateStatusById(@Param("id") Integer id);
 
- /*   @Query("update RequestEntity set name=req.name, description=req.description WHERE id = :req.id")
-    void updateById(@Param("Entity") RequestEntity req);*/
+    @Transactional
+    @Modifying
+    @Query("update RequestEntity set name=:name, description=:desc WHERE id = :id")
+    void updateById(@Param("id") Integer id, @Param("name") String name, @Param("desc") String desc);
+
     void deleteById(Integer id);
+
     List<RequestEntity> findAll();
+
     Optional<RequestEntity> findById(Integer id);
+
+
 }

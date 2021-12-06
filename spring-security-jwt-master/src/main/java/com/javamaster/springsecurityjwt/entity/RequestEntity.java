@@ -30,6 +30,9 @@ public class RequestEntity {
     @Column
     private Boolean status;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     public Integer getId() {
         return id;
@@ -64,16 +67,14 @@ public class RequestEntity {
         this.status = status;
     }
 
-    public List<UserEntity> getUserEntity() {
+    public UserEntity getUserEntity() {
         return userEntity;
     }
 
-    public void setUserEntity(List<UserEntity> userEntity) {
+    public void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
 
-    @ManyToMany
-    @JoinColumn(name = "user_id")
-    private List<UserEntity> userEntity;
+
 }
 
