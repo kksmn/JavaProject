@@ -25,7 +25,7 @@ public class AuthController {
     @Autowired
     private MailSender mailSender;
 
-    @PostMapping("/register")
+    @PostMapping(value="/register")
     public String registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) throws UserException {
         UserEntity u = new UserEntity();
         if(registrationRequest.getLogin()!=null) {

@@ -6,29 +6,35 @@ import com.javamaster.springsecurityjwt.entity.UserEntity;
 import com.javamaster.springsecurityjwt.exceptions.RequestException;
 import com.javamaster.springsecurityjwt.service.RequestService;
 
-import com.javamaster.springsecurityjwt.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.FileInputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 @RestController
 public class RequestController {
 
     @Autowired
     private RequestService requestService;
-    private static Logger logger;
-
-    public RequestController(){
-          logger = LoggerFactory.getLogger(RequestController.class);
+    static Logger LOGGER;
+    static {
+        try(FileInputStream ins = new FileInputStream("D:\\spring-security-jwt-master\\spring-security-jwt-master\\src\\main\\resources\\log.config")){
+            LogManager.getLogManager().readConfiguration(ins);
+            LOGGER = Logger.getLogger(RequestController.class.getName());
+        }catch (Exception ignore){
+            ignore.printStackTrace();
+        }
     }
 
     @PostMapping("/createRequest")
@@ -45,7 +51,7 @@ public class RequestController {
                 if (pricipal instanceof UserEntity) {
                     user = ((UserEntity) pricipal).getId();
                 }
-                logger.info("New request has been created");
+                LOGGER.log(Level.INFO,"New request has been created");
                 return "OK";
             }
 
