@@ -4,12 +4,19 @@ import com.javamaster.springsecurityjwt.entity.RequestEntity;
 import com.javamaster.springsecurityjwt.entity.Status;
 import com.javamaster.springsecurityjwt.entity.UserEntity;
 import com.javamaster.springsecurityjwt.exceptions.RequestException;
+import com.javamaster.springsecurityjwt.exceptions.UserException;
 import com.javamaster.springsecurityjwt.service.RequestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.FileInputStream;
@@ -22,7 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-@RestController
+@Controller
 public class RequestController {
 
     @Autowired
@@ -38,11 +45,12 @@ public class RequestController {
     }
 
     @PostMapping("/createRequest")
-    public String createRequest(@RequestBody @Valid NewRequest request) throws RequestException {
+    public ModelAndView createRequest( @Valid NewRequest request) throws RequestException {
         RequestEntity r = new RequestEntity();
 
             r.setName(request.getName());
             r.setDescription(request.getDescription());
+            r.setUserEntity(UserEntity.currentUser);
 
             if(requestService.saveRequest(r)){
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -52,14 +60,18 @@ public class RequestController {
                     user = ((UserEntity) pricipal).getId();
                 }
                 LOGGER.log(Level.INFO,"New request has been created");
-                return "OK";
+                List<RequestEntity> list=new ArrayList<RequestEntity>();
+                list= requestService.getAll();
+                ModelAndView modelAndView = new ModelAndView("index");
+                modelAndView.addObject("list",list);
+                return modelAndView;
             }
 
             else throw new RequestException("Incorrect name: such request already exists");
 
     }
     @PostMapping("/getByName")
-    public RequestEntity getRequests(@RequestBody @Valid NewRequest request) throws RequestException {
+    public RequestEntity getRequests( @Valid NewRequest request) throws RequestException {
         if(requestService.findByName(request.getName())!=null){
             RequestEntity req=new RequestEntity();
             req=requestService.findByName(request.getName());
@@ -87,28 +99,58 @@ public class RequestController {
         else throw new RequestException("Incorrect id");
 
     }
-    @GetMapping("/requests")
-    public List<RequestEntity> getAllRequests() {
-        List<RequestEntity> list=new ArrayList<RequestEntity>();
-        list= requestService.getAll();
-        return list;
-
-    }
-    @PutMapping("/user/{user_id}/request/{id}")
-    public RequestEntity editRequest(@PathVariable Integer user_id,@PathVariable Integer id, @RequestBody @Valid NewRequest request) throws RequestException {
+    @Retryable(value = UserException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @GetMapping("/request/{name}")
+    public ModelAndView getEditRequest(@PathVariable String name) throws RequestException, UserException {
 
         RequestEntity requestEntity = new RequestEntity();
-        Optional<RequestEntity> req = requestService.findById(id);
-        if (req.isPresent()) {
-            if (req.get().getUserEntity().getId() == user_id) {
-                requestEntity.setId(id);
-                requestEntity.setName(request.getName());
-                requestEntity.setDescription(request.getDescription());
-                requestService.updateById(id, requestEntity.getName(), requestEntity.getDescription());
-                return requestEntity;
+        RequestEntity req=requestService.findByName(name);
+        if(!(req.getUserEntity().equals(UserEntity.currentUser))){
+            throw new UserException("Not your article");
+        }
+        else {
+            ModelAndView modelAndView = new ModelAndView("editreq");
+            modelAndView.addObject("request", req);
+            return modelAndView;
+        }
+    }
+    @Retryable(value = UserException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @GetMapping("/delete/{name}")
+    public String deleteRequest(@PathVariable String name) throws RequestException, UserException {
 
-            } else throw new RequestException("Incorrect id");
-        } else throw new RequestException("Such request doesn't exist");
+        RequestEntity req=requestService.findByName(name);
+        if(!(UserEntity.currentUser.getRoles().equals("ROLE_ADMIN"))){
+            throw new UserException("You are not admin");
+        }
+        else {
+          requestService.deleteById(req.getId());
+        }
+        return "redirect:/getCollection";
+    }
+    @Recover
+    private ModelAndView recoverObject(Throwable throwable){
+        ModelAndView view = new ModelAndView();
+        view.setViewName("error");
+        System.out.println(throwable.getMessage());
+        return view;
+    }
+    @PostMapping("/editRequest/{id}")
+    public String editRequest(@PathVariable Integer id, NewRequest request) throws RequestException {
+        Optional<RequestEntity> requestEntity=requestService.findById(id);
+        if(requestEntity.isPresent()){
+            RequestEntity req=requestEntity.get();
+            requestService.updateById(id,request.getName(),request.getDescription());
+        }
+
+        return "redirect:/getCollection";
+    }
+    @RequestMapping(value = { "/getCollection"}, method = RequestMethod.GET)
+    public ModelAndView reqlist(Model model) {
+        List<RequestEntity> list=new ArrayList<RequestEntity>();
+        list= requestService.getAll();
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("list",list);
+        return modelAndView;
     }
 
 

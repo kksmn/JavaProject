@@ -1,32 +1,40 @@
 package com.javamaster.springsecurityjwt.controller;
 
 import com.javamaster.springsecurityjwt.config.jwt.JwtProvider;
+import com.javamaster.springsecurityjwt.entity.RequestEntity;
 import com.javamaster.springsecurityjwt.entity.UserEntity;
 import com.javamaster.springsecurityjwt.exceptions.RequestException;
 import com.javamaster.springsecurityjwt.exceptions.UserException;
 import com.javamaster.springsecurityjwt.service.MailSender;
+import com.javamaster.springsecurityjwt.service.RequestService;
 import com.javamaster.springsecurityjwt.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.rmi.server.UID;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-@RestController
+@Controller
 public class AuthController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RequestService reqService;
     @Autowired
     private JwtProvider jwtProvider;
     @Autowired
     private MailSender mailSender;
 
     @PostMapping(value="/register")
-    public String registerUser(     RegistrationRequest registrationRequest) throws UserException {
+    public ModelAndView  registerUser( RegistrationRequest registrationRequest) throws UserException {
         UserEntity u = new UserEntity();
         if(registrationRequest.getLogin()!=null) {
             if(registrationRequest.getPassword()!=null) {
@@ -42,7 +50,12 @@ public class AuthController {
                 );
 
                 // mailSender.send(u.getLogin(),"Activation code",message);
-                return "User is created";
+                List<RequestEntity> list=new ArrayList<RequestEntity>();
+                list= reqService.getAll();
+                UserEntity.currentUser=u;
+                ModelAndView modelAndView = new ModelAndView("index");
+                modelAndView.addObject("list",list);
+                return modelAndView;
             }
             else throw new UserException("Incorrect password");
         }
@@ -64,10 +77,15 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public AuthResponse auth(@RequestBody AuthRequest request) throws UserException {
+    public ModelAndView auth( AuthRequest request) throws UserException {
         UserEntity userEntity = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         String token = jwtProvider.generateToken(userEntity.getLogin());
+        List<RequestEntity> list=new ArrayList<RequestEntity>();
+        list= reqService.getAll();
+        UserEntity.currentUser=userEntity;
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("list",list);
+        return modelAndView;
 
-        return new AuthResponse(token);
     }
 }

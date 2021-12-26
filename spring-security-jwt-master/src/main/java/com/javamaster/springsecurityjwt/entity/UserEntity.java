@@ -1,6 +1,8 @@
 package com.javamaster.springsecurityjwt.entity;
 
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,4 +47,6 @@ public class UserEntity {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity roleEntity;
+    public static UserEntity currentUser=new UserEntity();
 }
+
