@@ -70,6 +70,7 @@ public class RequestController {
             else throw new RequestException("Incorrect name: such request already exists");
 
     }
+
     @PostMapping("/getByName")
     public RequestEntity getRequests( @Valid NewRequest request) throws RequestException {
         if(requestService.findByName(request.getName())!=null){
