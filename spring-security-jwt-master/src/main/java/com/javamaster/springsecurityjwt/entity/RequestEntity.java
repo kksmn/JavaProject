@@ -18,14 +18,11 @@ public class RequestEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column/*
-    @NotBlank(message = "Name cannot be empty")*/
+    @Column
     private String name;
 
-    @Column/*
-    @NotBlank(message = "Description cannot be empty")*/
+    @Column
     private String description;
-
 
     @Column
     private Boolean status;
