@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="col-md-7 col-lg-8">
+    <br>
+    <h4 class="mb-3">Edit article</h4>
+    <br>
+    <form class="needs-validation" novalidate="" th:action="@{/editRequest/{id}(id=${request.getId()})}" disabled="disabled"  object="${request}" method="post">
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="articleName" class="form-label">Article name</label>
+                <input type="text" field="*{Name}"
+                       name="Name" class="form-control"  text="${name}" id="articleName" th:placeholder=" ${request.getName()}" required="">
+                <div class="invalid-feedback">
+                    Please enter request name.
+                </div>
+            </div>
+</br>
+            <div class="col-12">
+                </br>
+                <label for="description" class="form-label">Description </label>
+                <input type="text" field="*{Description}"
+                       name="Description"class="form-control" id="description" th:placeholder=" ${request.getDescription()}">
+            </div>
+      </div>
+        <br>
+        <br>
+        <button class="btn btn-primary btn-lg" type="submit">Post it</button>
+    </form>
+</div>
+
+</body>
+</html>
